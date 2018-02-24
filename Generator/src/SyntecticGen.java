@@ -1,3 +1,15 @@
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -6,21 +18,17 @@ public class SyntecticGen {
     static boolean startExp1;
     static int[] options;
     static Cache exp1Cache, exp2Cache;
-    public static void main(String[] args) {        
+    static BufferedWriter writer;
+    public static void main(String[] args) throws IOException {        
         Scanner in = new Scanner(System.in);
         
-        System.out.println("Select your First Expert: ");
-        System.out.println("1 : LRU");
-        System.out.println("2 : LFU");
-        System.out.println("3 : ARC");
-        exp1 = in.nextInt();
-        
-        System.out.println("Select your Second Expert: ");
-        System.out.println("1 : LRU");
-        System.out.println("2 : LFU");
-        System.out.println("3 : ARC");
-        exp2 = in.nextInt();
-        
+        System.out.println("Name of the file to read the Configuration of the Experiment");
+        String filenameProp  = in.nextLine();
+        System.out.println("Name of the file to wrtie the traces");
+        String filenameOut  = in.nextLine();        
+        writer = new BufferedWriter(new FileWriter("..\\Output\\"+filenameOut, true));     
+        new ImputGen(filenameProp);
+        LoadPropertieFile();
         if (exp1 == exp2){
             System.out.println("Experts can't be the same algorithm");
             return;
@@ -28,22 +36,7 @@ public class SyntecticGen {
         if (exp1 > 3 || exp1 < 1 || exp2 > 3 || exp2 < 1 ){
             System.out.println("You must select a possible option");
             return;
-        }   
-        System.out.println("Define the capacity (N) of your cache");
-        cacheeSize = in.nextInt();
-        
-        System.out.println("Define the key of your max request (size of the data)");
-        reqRange = in.nextInt();
-        
-        System.out.println("Define the ammount of the request sequences");
-        neededSeq = in.nextInt();
-        
-        System.out.println("Will Expert 1 start first? Y/N");
-        startExp1 = in.next().equals("Y");
-        
-        System.out.println("Define the level of noise");
-        noise = in.nextInt();
-        
+        }      
         options = new int[reqRange];  
         for (int i = 0; i < reqRange; i++){
             options[i] = i+1;
@@ -60,6 +53,8 @@ public class SyntecticGen {
                 LFUARC();
             }
         }
+        writer.close();        
+        insertFileAttr(Paths.get("..\\Output\\"+filenameOut));
     }
     static void shuffleArray(int[] ar)
     {
@@ -87,7 +82,7 @@ public class SyntecticGen {
         int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
         return randomNum < noise;
     }
-    static void LRULFU(){
+    static void LRULFU() throws IOException{
         {
             exp1Cache = new LFUCache(cacheeSize);    
             exp2Cache = new LRUCache(cacheeSize);
@@ -97,7 +92,7 @@ public class SyntecticGen {
                 int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
                 rep = seqInt(randomNum, startExp1);
                 for (int j = 0; j < rep; j++){
-                    System.out.println(options[i]);
+                    writer.append(options[i] + "\n");
                     exp1Cache.set(options[i]);
                     exp2Cache.set(options[i]);
                 }           
@@ -108,7 +103,7 @@ public class SyntecticGen {
             for (int i = 0; i < neededSeq; i++){
                 if (addNoise()){
                     int randomReq = ThreadLocalRandom.current().nextInt(0, reqRange);
-                    System.out.println(randomReq);
+                    writer.append(randomReq + "\n");
                     exp2Cache.set(randomReq);
                     exp1Cache.set(randomReq);
                     if (exp1Cache.contains(randomReq))
@@ -133,14 +128,14 @@ public class SyntecticGen {
                                 bothmiss = options[j];
                         }
                         if (optLru != -1){
-                            System.out.println(optLru);
+                            writer.append(optLru + "\n");
                             exp2Cache.set(optLru);
                             exp1Cache.set(optLru);
                             exp1Hits ++;
                             exp2Miss ++;
                         }
                         else{
-                            System.out.println(bothmiss);
+                            writer.append(bothmiss + "\n");
                             exp2Cache.set(bothmiss);
                             exp1Cache.set(bothmiss);
                             exp1Miss ++;
@@ -156,14 +151,14 @@ public class SyntecticGen {
                                 bothmiss = options[j];                    
                         }
                         if (optLfu != -1){
-                            System.out.println(optLfu);
+                            writer.append(optLfu + "\n");     
                             exp2Cache.set(optLfu);
                             exp1Cache.set(optLfu);
                             exp2Hits ++;
                             exp1Miss ++;
                         }
                         else{
-                            System.out.println(bothmiss);
+                            writer.append(bothmiss + "\n"); 
                             exp2Cache.set(bothmiss);
                             exp1Cache.set(bothmiss);
                             exp1Miss ++;
@@ -190,6 +185,43 @@ public class SyntecticGen {
     static void LFUARC(){
             
     }
+    
+    static void LoadPropertieFile() throws FileNotFoundException, IOException{
+        Properties prop = new Properties();
+	InputStream input = null;
+        input = new FileInputStream("config.properties");
+
+        // load a properties file
+        prop.load(input);
+
+        // get the property value and print it out
+        exp1 = Integer.parseInt(prop.getProperty("firstExpert"));
+        exp2 = Integer.parseInt(prop.getProperty("secondExpert"));
+        cacheeSize = Integer.parseInt(prop.getProperty("cacheSize"));
+        reqRange = Integer.parseInt(prop.getProperty("maxRequest"));
+        startExp1 = prop.getProperty("startFirst").equals("Y");
+        noise = Integer.parseInt(prop.getProperty("noiseLevel"));
+        neededSeq = Integer.parseInt(prop.getProperty("sequencesNeeded"));
+        input.close();
+    }
+    
+    static void insertFileAttr(Path filePath) throws FileNotFoundException, IOException{
+        UserDefinedFileAttributeView view = Files.getFileAttributeView(filePath, UserDefinedFileAttributeView.class);
+        // The file attribute
+        String name = "Configuration";
+        String value = "firstExpert: "+ exp1 + "   secondExpert: "+ exp2 +"   cacheSize: "+ cacheeSize +"   maxRequest: "+ reqRange +"   startFirst: "+ startExp1 +"   noiseLevel: "+ noise +"   sequencesNeeded: "+ neededSeq;
+        // Write the properties
+        byte[] bytes = value.getBytes("UTF-8");
+        ByteBuffer writeBuffer = ByteBuffer.allocate(bytes.length);
+        writeBuffer.put(bytes);
+        writeBuffer.flip();
+        view.write(name, writeBuffer);
+        ByteBuffer readBuffer = ByteBuffer.allocate(view.size(name));
+        view.read(name, readBuffer);
+        readBuffer.flip();
+        String valueFromAttributes = new String(readBuffer.array(), "UTF-8");
+        System.out.println("File Attribute: " + valueFromAttributes);
+    }    
 }
 
 
