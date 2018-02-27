@@ -85,6 +85,14 @@ public class LFUCache implements Cache{
         Pair holder = hashMap.get(key);        
         return holder != null && holder.times == 1;
     }
+
+    public int containsHistory(int key) {
+       return -1;
+    }
+    
+    public int containsArc(int key) {
+       return -1;
+    }
     
     class Pair implements Comparable<Pair> {
         long stamp;

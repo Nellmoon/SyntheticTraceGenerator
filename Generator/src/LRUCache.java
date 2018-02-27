@@ -30,6 +30,14 @@ class LRUCache implements Cache{
         }
         return map.containsKey(key);
     }
+
+    public int containsHistory(int key) {
+       return -1;
+    }    
+    
+    public int containsArc(int key) {
+       return -1;
+    }
  
     public void remove(Node n){
         if(n.pre!=null){
