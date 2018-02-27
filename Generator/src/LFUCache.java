@@ -94,6 +94,10 @@ public class LFUCache implements Cache{
        return -1;
     }
     
+    public void printCache(){
+        System.out.println("");
+    }
+    
     class Pair implements Comparable<Pair> {
         long stamp;
         int key;

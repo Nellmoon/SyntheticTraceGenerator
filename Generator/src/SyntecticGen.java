@@ -26,7 +26,7 @@ public class SyntecticGen {
         System.out.println("Name of the file to write the traces");
         String filenameOut  = in.nextLine();        
         writer = new BufferedWriter(new FileWriter("..\\Output\\"+filenameOut, true));     
-        new ImputGen(filenameProp);
+        new InputGen(filenameProp);
         LoadPropertieFile();
         if (exp1 == exp2){
             System.out.println("Experts can't be the same algorithm");
@@ -221,33 +221,31 @@ public class SyntecticGen {
                 if (start_Exp1){                
                     for (int j = 0; j < options.length; j++){
                         if (exp1_Cache.contains(options[j])){
-                            if (exp2_Cache.containsArc(options[j]) == 0){
-                                if (exp2_Cache.containsHistory(options[j]) == 0 && (optLru == -1 || coinFlip())){
-                                    optLru = options[j];
+                            if (exp2_Cache.containsArc(options[j]) == 0){                                
+                                if (exp2_Cache.containsHistory(options[j]) == 2 && (hitHistory_b2 == -1)){
+                                    hitHistory_b2 = options[j];
                                 }
                                 else{
-                                    if (exp2_Cache.containsHistory(options[j]) == 1 && (hitHistory_b1 == -1 || coinFlip())){
+                                    if (exp2_Cache.containsHistory(options[j]) == 1 && hitHistory_b1 == -1)
                                         hitHistory_b1 = options[j];
-                                    }
-                                    else 
-                                    {
-                                        if (hitHistory_b2 == -1 || coinFlip())
-                                            hitHistory_b2 = options[j];
+                                    else {
+                                        if (exp2_Cache.containsHistory(options[j]) == 0 && (optLru == -1))
+                                            optLru = options[j];
                                     }
                                 }
                             }
                         }
                         else{
-                            if (exp2_Cache.containsHistory(options[j]) == 0 && (bothmiss == -1 || coinFlip()))
+                            if (exp2_Cache.containsArc(options[j]) == 0 && exp2_Cache.containsHistory(options[j]) == 0 && (bothmiss == -1))
                                 bothmiss = options[j];
-                        }
+                        }                    
                     }
-                    if (optLru != -1){
-                        writer.append(optLru + "\n");
-                        exp1_Cache.set(optLru);
-                        exp2_Cache.set(optLru);
-                        exp1Hits ++;
-                        exp2Miss ++;
+                    if (hitHistory_b2 != -1){
+                            writer.append(hitHistory_b2 + "\n");
+                            exp1_Cache.set(hitHistory_b2);
+                            exp2_Cache.set(hitHistory_b2);
+                            exp1Hits ++;
+                            exp2Miss ++;            
                     }
                     else{
                         if (hitHistory_b1 != -1){
@@ -255,40 +253,42 @@ public class SyntecticGen {
                             exp1_Cache.set(hitHistory_b1);
                             exp2_Cache.set(hitHistory_b1);
                             exp1Hits ++;
-                            exp2Miss ++;
+                            exp2Miss ++;            
                         }
                         else{
-                            if (hitHistory_b2 != -1){
-                                writer.append(hitHistory_b2 + "\n");
-                                exp1_Cache.set(hitHistory_b2);
-                                exp2_Cache.set(hitHistory_b2);
+                            if (optLru != -1){
+                                writer.append(optLru + "\n");
+                                exp1_Cache.set(optLru);
+                                exp2_Cache.set(optLru);
                                 exp1Hits ++;
-                                exp2Miss ++;
+                                exp2Miss ++;            
                             }
                             else{
                                 writer.append(bothmiss + "\n");
                                 exp1_Cache.set(bothmiss);
                                 exp2_Cache.set(bothmiss);
                                 exp1Miss ++;
-                                exp2Miss ++;
+                                exp2Miss ++; 
                             }
-                        }
+                        }                    
                     }
                 }
                 else{
                     for (int j = 0; j < options.length; j++){
                         if (!exp1_Cache.contains(options[j])){
-                            if (exp2_Cache.containsArc(options[j]) == 1 && (optArc_t1 == -1 || coinFlip()))
-                                optArc_t1 = options[j];
+                            if (exp2_Cache.containsArc(options[j]) == 2 && (optArc_t2 == -1 || coinFlip())){                                
+                                optArc_t2 = options[j];
+                                break;
+                            }
                             else{
-                                if ( exp2_Cache.containsArc(options[j]) == 2 && (optArc_t2 == -1 || coinFlip()))
-                                    optArc_t2 = options[j];
+                                if ( exp2_Cache.containsArc(options[j]) == 1 && (optArc_t1 == -1 || coinFlip()))
+                                    optArc_t1 = options[j];
                                 else{
-                                    if (exp2_Cache.containsHistory(options[j]) == 1 && (hitHistory_b1 == -1 || coinFlip()))
-                                        hitHistory_b1 = options[j];
+                                    if (exp2_Cache.containsHistory(options[j]) == 2 && (hitHistory_b2 == -1 || coinFlip()))
+                                        hitHistory_b2 = options[j];
                                     else{
-                                        if (exp2_Cache.containsHistory(options[j]) == 2 && (hitHistory_b2 == -1 || coinFlip()))
-                                            hitHistory_b2 = options[j];
+                                        if (exp2_Cache.containsHistory(options[j]) == 1 && (hitHistory_b1 == -1 || coinFlip()))
+                                            hitHistory_b1 = options[j];
                                         else{
                                             if (!exp2_Cache.contains(options[j]) && (bothmiss == -1 || coinFlip()))
                                                 bothmiss = options[j]; 
@@ -298,43 +298,43 @@ public class SyntecticGen {
                             }
                         }
                     }
-                    if (optArc_t1 != -1){
-                        writer.append(optArc_t1 + "\n");     
-                        exp1_Cache.set(optArc_t1);
-                        exp2_Cache.set(optArc_t1);
+                    if (optArc_t2 != -1){
+                        writer.append(optArc_t2 + "\n");     
+                        exp1_Cache.set(optArc_t2);
+                        exp2_Cache.set(optArc_t2);
                         exp2Hits ++;
-                        exp1Miss ++;
+                        exp1Miss ++;            
                     }                    
                     else{
-                        if (optArc_t2 != -1){
-                            writer.append(optArc_t2 + "\n");     
-                            exp1_Cache.set(optArc_t2);
-                            exp2_Cache.set(optArc_t2);
+                        if (optArc_t1 != -1){
+                            writer.append(optArc_t1 + "\n");     
+                            exp1_Cache.set(optArc_t1);
+                            exp2_Cache.set(optArc_t1);
                             exp2Hits ++;
-                            exp1Miss ++;
+                            exp1Miss ++;            
                         }
                         else{
-                            if (hitHistory_b1 != -1){
-                                writer.append(hitHistory_b1 + "\n");
-                                exp1_Cache.set(hitHistory_b1);
-                                exp2_Cache.set(hitHistory_b1);
+                            if (hitHistory_b2 != -1){
+                                writer.append(hitHistory_b2 + "\n");
+                                exp1_Cache.set(hitHistory_b2);
+                                exp2_Cache.set(hitHistory_b2);
                                 exp1Miss ++;
-                                exp2Miss ++;
+                                exp2Miss ++;            
                             }
                             else{
-                                if(hitHistory_b2 != -1){
-                                    writer.append(hitHistory_b2 + "\n");
-                                    exp1_Cache.set(hitHistory_b2);
-                                    exp2_Cache.set(hitHistory_b2);
+                                if(hitHistory_b1 != -1){
+                                    writer.append(hitHistory_b1 + "\n");
+                                    exp1_Cache.set(hitHistory_b1);
+                                    exp2_Cache.set(hitHistory_b1);
                                     exp1Miss ++;
-                                    exp2Miss ++;
+                                    exp2Miss ++;            
                                 }
                                 else{
                                     writer.append(bothmiss + "\n"); 
                                     exp1_Cache.set(bothmiss);
                                     exp2_Cache.set(bothmiss);
                                     exp1Miss ++;
-                                    exp2Miss ++;
+                                    exp2Miss ++;            
                                 }
                             }
                         }
@@ -344,6 +344,11 @@ public class SyntecticGen {
             if (!flip && i > neededSeq/2 ){
                 start_Exp1 = !start_Exp1;
                 flip = true;
+                System.out.println("");
+                System.out.println("***************************************************");
+                System.out.println("*   LRU hits: "+ exp1Hits +"   LRU Misses: "+ exp1Miss);
+                System.out.println("*   ARC hits: "+ exp2Hits +"   ARC Misses: "+ exp2Miss);
+                System.out.println("***************************************************");
             }
         }
         System.out.println("");
@@ -380,7 +385,7 @@ public class SyntecticGen {
         UserDefinedFileAttributeView view = Files.getFileAttributeView(filePath, UserDefinedFileAttributeView.class);
         // The file attribute
         String name = "Configuration";
-        String value = "firstExpert: "+ exp1 + "   secondExpert: "+ exp2 +"   cacheSize: "+ cacheeSize +"   maxRequest: "+ reqRange +"   startFirst: "+ start_Exp1 +"   noiseLevel: "+ noise +"   sequencesNeeded: "+ neededSeq;
+        String value = "firstExpert: "+ exp1 + "   secondExpert: "+ exp2 +"   cacheSize: "+ cacheeSize +"   maxRequest: "+ reqRange +"   startFirst: "+ !start_Exp1 +"   noiseLevel: "+ noise +"   sequencesNeeded: "+ neededSeq;
         // Write the properties
         byte[] bytes = value.getBytes("UTF-8");
         ByteBuffer writeBuffer = ByteBuffer.allocate(bytes.length);

@@ -90,6 +90,13 @@ public class ARCCache implements Cache{
         return 0;
     }
     
+    public void printCache(){
+        System.out.print("ARC   T1: " + t1.toString());
+        System.out.print( " T2: " + t2.toString());
+        System.out.print(" B1: " + b1.toString());
+        System.out.println(" B2: " + b2.toString());
+    }
+    
     public boolean t1_contains(int key){
         return t1.contains(key);
     }

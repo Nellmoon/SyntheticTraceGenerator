@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
-public class ImputGen {
-    public ImputGen(String filename) throws FileNotFoundException, IOException{
+public class InputGen {
+    public InputGen(String filename) throws FileNotFoundException, IOException{
         Properties prop = new Properties();
         OutputStream output = null;
-        BufferedReader reader = new BufferedReader(new FileReader("..\\Imput\\"+filename));
+        BufferedReader reader = new BufferedReader(new FileReader("..\\Input\\"+filename));
         String line = "";
         output = new FileOutputStream("config.properties");
         try

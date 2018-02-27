@@ -88,12 +88,13 @@ class LRUCache implements Cache{
     }
     
     public void printCache(){
-        Node holder = head;
+        Node holder = head;        
+        System.out.print("LRU ");
         while (!holder.equals(end)){
-            System.out.println(holder.key);
+            System.out.print(" " + holder.key);
             holder = holder.next;
         }
-        System.out.println(end.key);
+        System.out.println(" " +end.key);
     }
 }
 
