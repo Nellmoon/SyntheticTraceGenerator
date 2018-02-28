@@ -12,12 +12,13 @@ import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class SyntecticGen {
-    static int exp1Hits, exp1Miss, exp2Hits, exp2Miss, exp1, exp2, cacheeSize, reqRange, neededSeq, noise;
+public class SyntecticGenerator {
+    static int exp1Hits, exp1Miss, exp2Hits, exp2Miss, exp1, exp2, cacheSize, reqRange, neededSeq, noise;
     static boolean start_Exp1;
     static int[] options;
     static Cache exp2_Cache, exp1_Cache;
     static BufferedWriter writer;
+    
     public static void main(String[] args) throws IOException {        
         Scanner in = new Scanner(System.in);
         
@@ -55,8 +56,8 @@ public class SyntecticGen {
         writer.close();        
         insertFileAttr(Paths.get("..\\Output\\"+filenameOut));
     }
-    static void shuffleArray(int[] ar)
-    {
+    
+    static void shuffleArray(int[] ar){
         Random rnd = ThreadLocalRandom.current();
         for (int i = ar.length - 1; i > 0; i--)
         {
@@ -85,11 +86,11 @@ public class SyntecticGen {
     }
     static void LRULFU() throws IOException{
         { 
-            exp1_Cache = new LRUCache(cacheeSize);
-            exp2_Cache = new LFUCache(cacheeSize);   
+            exp1_Cache = new LRUCache(cacheSize);
+            exp2_Cache = new LFUCache(cacheSize);   
 
             int rep;
-            for (int i = 0; i < cacheeSize; i++){            
+            for (int i = 0; i < cacheSize; i++){            
                 int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
                 rep = seqInt(randomNum, start_Exp1);
                 for (int j = 0; j < rep; j++){
@@ -180,11 +181,11 @@ public class SyntecticGen {
         }        
     }        
     static void LRUARC()throws IOException { 
-        exp1_Cache = new LRUCache(cacheeSize);
-        exp2_Cache = new ARCCache(cacheeSize);   
+        exp1_Cache = new LRUCache(cacheSize);
+        exp2_Cache = new ARCCache(cacheSize);   
 
         int rep;
-        for (int i = 0; i < cacheeSize; i++){            
+        for (int i = 0; i < cacheSize; i++){            
             int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
             rep = seqInt(randomNum, start_Exp1);
             for (int j = 0; j < rep; j++){
@@ -194,7 +195,7 @@ public class SyntecticGen {
             }           
         }
 
-        int bothmiss, optArc_t1, optArc_t2, optLru, hitHistory_b1, hitHistory_b2;
+        int bothmiss, bothmissPref_b1,bothmissPref_b2, bothhit, optArc_t1, optArc_t2, optLru, hitHistory_b1, hitHistory_b2;
         boolean flip = false;
         for (int i = 0; i < neededSeq; i++){
             if (addNoise()){
@@ -213,15 +214,18 @@ public class SyntecticGen {
             }
             else{
                 hitHistory_b1 = -1;
+                bothmissPref_b1 = -1;
+                bothmissPref_b2 = -1;
                 hitHistory_b2 = -1;
                 bothmiss = -1;
                 optArc_t1 = -1;
                 optArc_t2 = -1;
                 optLru = -1;
+                bothhit = -1;
                 if (start_Exp1){                
                     for (int j = 0; j < options.length; j++){
                         if (exp1_Cache.contains(options[j])){
-                            if (exp2_Cache.containsArc(options[j]) == 0){                                
+                            if (!exp2_Cache.contains(options[j])){                                
                                 if (exp2_Cache.containsHistory(options[j]) == 2 && (hitHistory_b2 == -1)){
                                     hitHistory_b2 = options[j];
                                 }
@@ -234,10 +238,25 @@ public class SyntecticGen {
                                     }
                                 }
                             }
+                            else{
+                                if (exp2_Cache.containsHistory(options[j]) == 1 && (bothhit == -1)){
+                                    bothhit = options[j];
+                                }
+                            }
                         }
                         else{
-                            if (exp2_Cache.containsArc(options[j]) == 0 && exp2_Cache.containsHistory(options[j]) == 0 && (bothmiss == -1))
-                                bothmiss = options[j];
+                            if (exp2_Cache.containsArc(options[j]) == 0){
+                                if (exp2_Cache.containsHistory(options[j]) == 1)
+                                    bothmissPref_b1 = options[j];  
+                                else{
+                                    if (exp2_Cache.containsHistory(options[j]) == 2)
+                                        bothmissPref_b2 = options[j];            
+                                }
+                            }
+                            else{
+                                if (exp2_Cache.containsArc(options[j]) == 1)
+                                    optArc_t1 = options[j];
+                            }
                         }                    
                     }
                     if (hitHistory_b2 != -1){
@@ -264,11 +283,38 @@ public class SyntecticGen {
                                 exp2Miss ++;            
                             }
                             else{
-                                writer.append(bothmiss + "\n");
-                                exp1_Cache.set(bothmiss);
-                                exp2_Cache.set(bothmiss);
-                                exp1Miss ++;
-                                exp2Miss ++; 
+                                if (bothhit != -1){
+                                    writer.append(bothhit + "\n");
+                                    exp1_Cache.set(bothhit);
+                                    exp2_Cache.set(bothhit);
+                                    exp1Hits ++;
+                                    exp2Hits ++;
+                                }
+                                else{
+                                    if (bothmissPref_b1 != -1){
+                                        writer.append(bothmissPref_b1 + "\n");
+                                        exp1_Cache.set(bothmissPref_b1);
+                                        exp2_Cache.set(bothmissPref_b1);
+                                        exp1Miss ++;
+                                        exp2Miss ++;   
+                                    }
+                                    else{
+                                        if (bothmissPref_b2 != -1){
+                                            writer.append(bothmissPref_b2 + "\n");
+                                            exp1_Cache.set(bothmissPref_b2);
+                                            exp2_Cache.set(bothmissPref_b2);
+                                            exp1Miss ++;
+                                            exp2Miss ++;
+                                        }
+                                        else{
+                                            writer.append(optArc_t1 + "\n");
+                                            exp1_Cache.set(optArc_t1);
+                                            exp2_Cache.set(optArc_t1);
+                                            exp1Miss ++;
+                                            exp2Hits ++;                                        
+                                        }
+                                    }
+                                }
                             }
                         }                    
                     }
@@ -373,7 +419,7 @@ public class SyntecticGen {
         // get the property value and print it out
         exp1 = Integer.parseInt(prop.getProperty("firstExpert"));
         exp2 = Integer.parseInt(prop.getProperty("secondExpert"));
-        cacheeSize = Integer.parseInt(prop.getProperty("cacheSize"));
+        cacheSize = Integer.parseInt(prop.getProperty("cacheSize"));
         reqRange = Integer.parseInt(prop.getProperty("maxRequest"));
         start_Exp1 = prop.getProperty("startFirst").equals("Y");
         noise = Integer.parseInt(prop.getProperty("noiseLevel"));
@@ -385,7 +431,7 @@ public class SyntecticGen {
         UserDefinedFileAttributeView view = Files.getFileAttributeView(filePath, UserDefinedFileAttributeView.class);
         // The file attribute
         String name = "Configuration";
-        String value = "firstExpert: "+ exp1 + "   secondExpert: "+ exp2 +"   cacheSize: "+ cacheeSize +"   maxRequest: "+ reqRange +"   startFirst: "+ !start_Exp1 +"   noiseLevel: "+ noise +"   sequencesNeeded: "+ neededSeq;
+        String value = "firstExpert: "+ exp1 + "   secondExpert: "+ exp2 +"   cacheSize: "+ cacheSize +"   maxRequest: "+ reqRange +"   startFirst: "+ !start_Exp1 +"   noiseLevel: "+ noise +"   sequencesNeeded: "+ neededSeq;
         // Write the properties
         byte[] bytes = value.getBytes("UTF-8");
         ByteBuffer writeBuffer = ByteBuffer.allocate(bytes.length);
