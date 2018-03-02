@@ -10,11 +10,14 @@ public class InputGen {
     public InputGen(String filename) throws FileNotFoundException, IOException{
         Properties prop = new Properties();
         OutputStream output = null;
-        BufferedReader reader = new BufferedReader(new FileReader("..\\Input\\"+filename));
+        BufferedReader reader = new BufferedReader(new FileReader("..\\Input\\"+filename+".txt"));
         String line = "";
         output = new FileOutputStream("config.properties");
         try
         {
+            //Description:
+            line = reader.readLine();
+             prop.setProperty("Description", line.substring(12));
             //FIRST_EXPERT:
             line = reader.readLine();
              prop.setProperty("firstExpert", line.substring(13));
@@ -23,7 +26,10 @@ public class InputGen {
              prop.setProperty("secondExpert", line.substring(14));            
             //CACHE_SIZE:
             line = reader.readLine();
-             prop.setProperty("cacheSize", line.substring(11));            
+             prop.setProperty("cacheSize", line.substring(11));                             
+            //NUM_CHANGES:
+            line = reader.readLine();
+             prop.setProperty("numChanges", line.substring(12));     
             //MAX_REQUEST_SIZE:
             line = reader.readLine();
              prop.setProperty("maxRequest", line.substring(17));            
