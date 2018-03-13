@@ -80,10 +80,10 @@ public class SyntecticGenerator {
         }
     }
     
-    static int seqInt (int prob, boolean startLRU){
-        if (prob < 1)
+    static int seqInt (int prob){
+        if (prob < 21)
             return 1;
-        if (prob < 30)
+        if (prob < 50)
             return 2;
         return 3;            
     }
@@ -105,14 +105,15 @@ public class SyntecticGenerator {
             int rep;
             for (int i = 0; i < cacheSize; i++){            
                 int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
-                rep = seqInt(randomNum, start_Exp1);
+                rep = seqInt(randomNum);
                 for (int j = 0; j < rep; j++){
                     writer.append(options[i] + "\n");
                     exp2_Cache.set(options[i]);
                     exp1_Cache.set(options[i]);
                 }           
             }
-
+            
+            writer.append(-1 + "\n"); 
             int bothmiss, optLru, optLfu;
             for (int i = 0; i < neededSeq; i++){
                 if (addNoise()){
@@ -181,14 +182,24 @@ public class SyntecticGenerator {
                         }
                     }
                 }
-                phaseState = (i/(neededSeq/numChanges)%2 == 0) ? start_Exp1 : !start_Exp1;
+                
+                if ((i/(neededSeq/numChanges)%2 == 0) != (phaseState == start_Exp1)){
+                    phaseState = (i/(neededSeq/numChanges)%2 == 0) ? start_Exp1 : !start_Exp1;
+                    writer.append(-1 + "\n"); 
+                    System.out.println("");
+                    System.out.println("***************************************************");
+                    System.out.println("*   LRU hits: "+ exp1Hits +"   LRU Misses: "+ exp1Miss);
+                    System.out.println("*   LFU hits: "+ exp2Hits +"   LFU Misses: "+ exp2Miss);
+                    System.out.println("***************************************************");
+                }
             }
-            System.out.println("");
-            System.out.println("***************************************************");
-            System.out.println("*   LRU hits: "+ exp1Hits +"   LRU Misses: "+ exp1Miss);
-            System.out.println("*   LFU hits: "+ exp2Hits +"   LFU Misses: "+ exp2Miss);
-            System.out.println("***************************************************");
-        }        
+        } 
+        writer.append(-1 + "\n"); 
+        System.out.println("");
+        System.out.println("***************************************************");
+        System.out.println("*   LRU hits: "+ exp1Hits +"   LRU Misses: "+ exp1Miss);
+        System.out.println("*   LFU hits: "+ exp2Hits +"   LFU Misses: "+ exp2Miss);
+        System.out.println("***************************************************");       
     }    
     
     static void LRUARC()throws IOException { 
@@ -199,7 +210,7 @@ public class SyntecticGenerator {
         int rep;
         for (int i = 0; i < cacheSize; i++){            
             int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
-            rep = seqInt(randomNum, start_Exp1);
+            rep = seqInt(randomNum);
             for (int j = 0; j < rep; j++){
                 writer.append(options[i] + "\n");
                 exp1_Cache.set(options[i]);
@@ -207,6 +218,7 @@ public class SyntecticGenerator {
             }           
         }
 
+        writer.append(-1 + "\n");         
         int bothmiss, bothmissPref_b1, bothmissPref_b2, optArc_t1, optArc_t2, optLru, hitHistory_b1, hitHistory_b2, bothhit;
         for (int i = 0; i < neededSeq; i++){
             if (addNoise()){
@@ -385,9 +397,19 @@ public class SyntecticGenerator {
                         }
                     }
                 }
-                phaseState = (i/(neededSeq/numChanges)%2 == 0) ? start_Exp1 : !start_Exp1;
+                if ((i/(neededSeq/numChanges)%2 == 0) != (phaseState == start_Exp1)){
+                    phaseState = (i/(neededSeq/numChanges)%2 == 0) ? start_Exp1 : !start_Exp1;
+                    writer.append(-1 + "\n"); 
+                    System.out.println("");
+                    System.out.println("***************************************************");
+                    System.out.println("*   LRU hits: "+ exp1Hits +"   LRU Misses: "+ exp1Miss);
+                    System.out.println("*   ARC hits: "+ exp2Hits +"   ARC Misses: "+ exp2Miss);
+                    System.out.println("***************************************************");
+                }
             }
         }
+        
+        writer.append(-1 + "\n"); 
         System.out.println("");
         System.out.println("***************************************************");
         System.out.println("*   LRU hits: "+ exp1Hits +"   LRU Misses: "+ exp1Miss);
@@ -403,7 +425,7 @@ public class SyntecticGenerator {
         int rep;
         for (int i = 0; i < cacheSize; i++){            
             int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
-            rep = seqInt(randomNum, start_Exp1);
+            rep = seqInt(randomNum);
             for (int j = 0; j < rep; j++){
                 writer.append(options[i] + "\n");
                 exp1_Cache.set(options[i]);
@@ -411,6 +433,7 @@ public class SyntecticGenerator {
             }           
         }
 
+        writer.append(-1 + "\n"); 
         int bothmiss, optArc_t1, optArc_t2, optLfu, hitHistory_b1, hitHistory_b2;
         for (int i = 0; i < neededSeq; i++){
             if (addNoise()){
@@ -534,8 +557,19 @@ public class SyntecticGenerator {
                     }
                 }
             }
-            phaseState = (i/(neededSeq/numChanges)%2 == 0) ? start_Exp1 : !start_Exp1;
+            
+            if ((i/(neededSeq/numChanges)%2 == 0) != (phaseState == start_Exp1)){
+                phaseState = (i/(neededSeq/numChanges)%2 == 0) ? start_Exp1 : !start_Exp1;
+                writer.append(-1 + "\n"); 
+                System.out.println("");
+                System.out.println("***************************************************");
+                System.out.println("*   LFU hits: "+ exp1Hits +"   LFU Misses: "+ exp1Miss);
+                System.out.println("*   ARC hits: "+ exp2Hits +"   ARC Misses: "+ exp2Miss);
+                System.out.println("***************************************************");
+            }
         }
+        
+        writer.append(-1 + "\n"); 
         System.out.println("");
         System.out.println("***************************************************");
         System.out.println("*   LFU hits: "+ exp1Hits +"   LFU Misses: "+ exp1Miss);
