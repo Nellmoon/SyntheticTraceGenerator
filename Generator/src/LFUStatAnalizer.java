@@ -52,8 +52,6 @@ public class LFUStatAnalizer {
             public void run() {
                 ChartBuilder.source = "..\\Stats\\"+file + "LFUSingle.txt"; 
                 ChartBuilder.destination = "..\\Stats\\"+file + "LFUSingle.jpg";
-                ChartBuilder.source2 = "..\\Stats\\"+file + "LFUPollution.txt"; 
-                ChartBuilder.destination2 = "..\\Stats\\"+file + "LFUPollution.jpg";
                 javafx.application.Application.launch(ChartBuilder.class);
             }
         }.start();

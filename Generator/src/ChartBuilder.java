@@ -23,15 +23,10 @@ public class ChartBuilder extends Application{
            
     public static String source = "File.txt";
     public static String destination = "Line Chart.jpg";
-    
-    public static String source2 = "File.txt";
-    public static String destination2 = "Line Chart.jpg";    
-    
+        
     @Override
     public void start(Stage primaryStage) throws Exception {
         saveAsPNG(destination);
-        source = source2;
-        saveAsPNG(destination2);
         System.exit(0);
     }
     
