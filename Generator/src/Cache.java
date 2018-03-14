@@ -7,5 +7,6 @@ public interface Cache {
     public boolean contains(int key);
     public int containsHistory(int key);
     public int containsArc(int key); 
-    public void printCache();     
+    public void printCache();   
+    public int [] toArrayInt();
 }

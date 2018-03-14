@@ -1,12 +1,16 @@
+import com.sun.javafx.charts.Legend;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -15,15 +19,12 @@ import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
-/**
- *
- * @author Luis
- */
+
 public class ChartBuilder extends Application{
            
-    public static String source = "File.txt";
-    public static String destination = "Line Chart.jpg";
-        
+    public static String destination = "Line Chart.jpg";    
+    public static ArrayList<String> sources = new ArrayList<>();
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         saveAsPNG(destination);
@@ -48,28 +49,79 @@ public class ChartBuilder extends Application{
         Scene scene = null;
         
         //defining the axes
-        final NumberAxis xAxis = new NumberAxis(0, 255, 5);
+        final NumberAxis xAxis = new NumberAxis(0, 305, 5);
         final NumberAxis yAxis = new NumberAxis(0, 100, 5);
         //creating the chart
         final LineChart<Number,Number> lineChart = new LineChart<>(xAxis,yAxis);   
         
         try {
-            br = new BufferedReader(new FileReader(source));
+            br = new BufferedReader(new FileReader(sources.get(0)));
             String currentLine, title;
-            
             //read title, legend and check that file has at least the two lines to start
-            if(((title = br.readLine()) != null) && ((currentLine = br.readLine()) != null)){
+            if(((title = br.readLine()) != null)){
                 lineChart.setTitle(title);
                 //defining a series
-                XYChart.Series series = new XYChart.Series();
-                series.setName(currentLine);
-                
+                XYChart.Series series = new XYChart.Series() ;                
                 //start reading the numbers and loading them to the series
-                int i = 1;
-                while((currentLine = br.readLine()) != null){
-                    series.getData().add(new XYChart.Data(i++, Double.parseDouble(currentLine)));
+                int index = 0;                              
+                while(index < sources.size()){
+                    int j = 1;
+                    currentLine = br.readLine();
+                    series.setName(currentLine);
+                    while((currentLine = br.readLine()) != null){
+                        series.getData().add(new XYChart.Data(j++, Double.parseDouble(currentLine)));
+                    }
+                    
+                    lineChart.getData().add(series);
+                    br.close();
+                    if(++index < sources.size()){
+                        br = new BufferedReader(new FileReader(sources.get(index)));          
+                    }
+                    
+                    Node line = series.getNode().lookup(".chart-series-line");
+                    Color color;
+                    switch(index-1){
+                        case 0: color = Color.BLUE; 
+                                break;
+                        case 1: color = Color.YELLOW; 
+                                break;
+                        case 2: color = Color.RED; 
+                                break;
+                        default:
+                                color = Color.BLACK;                         
+                    }
+
+                    String rgb = String.format("%d, %d, %d",
+                                (int) (color.getRed()),
+                                (int) (color.getGreen()),
+                                (int) (color.getBlue()));
+
+                    line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");                        
+                    series = new XYChart.Series();
                 }
                 
+                int j = 0;
+                for(Node n : lineChart.getChildrenUnmodifiable()){
+                    if(n instanceof Legend){
+                        for(Legend.LegendItem legendItem : ((Legend)n).getItems()){
+                            String color;
+                            switch(j){
+                                case 0: color = "#0000ff"; 
+                                        break;
+                                case 1: color = "#ffff00"; 
+                                        break;
+                                case 2: color = "#ff0000"; 
+                                        break;
+                                default:
+                                        color = "#000000";                        
+                            }
+                            j++;
+                            legendItem.getSymbol().setStyle("-fx-background-color: "+color+", white;");
+                        }
+                        break;
+                    }
+                }
+            
                 //hide XAxis
                 lineChart.getXAxis().setTickLabelsVisible(false);
                 lineChart.getXAxis().setOpacity(0);
@@ -77,12 +129,10 @@ public class ChartBuilder extends Application{
                 //hide dots
                 lineChart.setCreateSymbols(false);
                 //increase text size
-                lineChart.setStyle("-fx-font-size: 40px;");
-                //set data to chart
-                lineChart.getData().add(series);
+                lineChart.setStyle("-fx-font-size: 100px;");
                 //set image size
-                scene  = new Scene(lineChart,5760,1920);    
-                
+                scene = new Scene(lineChart,5760,1920);    
+                  
             }else{
                 return null;
             }
@@ -103,7 +153,6 @@ public class ChartBuilder extends Application{
     
     public static void main(String args[]){
         launch(args);
-        
     }
     
 }

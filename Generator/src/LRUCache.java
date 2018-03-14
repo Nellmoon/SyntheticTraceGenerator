@@ -96,6 +96,18 @@ class LRUCache implements Cache{
         }
         System.out.println(" " +end.key);
     }
+    
+    public int[] toArrayInt() {
+        int[] arr = new int[capacity];
+        Node holder = head;        
+        int i = 0;
+        while (!holder.equals(end)){
+            arr[i] = holder.key;
+            holder = holder.next;
+            i++;
+        }
+        return arr;
+    }
 }
 
 class Node{

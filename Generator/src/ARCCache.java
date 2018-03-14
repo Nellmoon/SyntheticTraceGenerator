@@ -1,10 +1,10 @@
 import java.util.LinkedList;
 
 public class ARCCache implements Cache{  
-    private int C;
-    private LinkedList<Integer> t1, t2, b1, b2;
-    private LinkedList<String> hist;
-    private double P;
+    public int C;
+    public LinkedList<Integer> t1, t2, b1, b2;
+    public LinkedList<String> hist;
+    public double P;
     
     public ARCCache(int cache_sz){
         C = cache_sz;
@@ -150,6 +150,25 @@ public class ARCCache implements Cache{
         hash += "|";
 
         return hash;
+    }
+
+    public int[] toArrayInt() {
+        Integer[] arr1 = new Integer[t1.size()];
+        arr1 = t1.toArray(arr1);
+        Integer[] arr2 = new Integer[t2.size()];
+        arr2 = t2.toArray(arr2);
+        int[] arr = new int[t1.size()+ t2.size()];
+        int i = 0;
+        while(i < t1.size()){
+            arr[i] = (int)arr1[i];
+            i++;
+        }
+        int j = 0;
+        while(j < t2.size()){
+            arr[t1.size() + j] = (int)arr2[j];
+            j++;
+        }
+        return arr;
     }
 }
 

@@ -97,4 +97,14 @@ public class LFUCache implements Cache{
     public void printCache(){
         System.out.println("");
     }       
+
+    public int[] toArrayInt() {
+       Pair[] arr = new Pair[capacity];
+       arr = minHeap.toArray(arr); 
+       int[] arr2 = new int[capacity];
+       for (int i = 0; i < capacity; i++)
+           arr2[i] = arr[i].key;
+       
+       return arr2;        
+    }
 }
