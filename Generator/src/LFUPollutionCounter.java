@@ -50,12 +50,12 @@ public class LFUPollutionCounter {
         
         //Check for pollution 
         //writer.append((countSingles(lfu.minHeap.toArray())/N)*100 + "\n");
-        writer2.append((countPollution(lfu.toArrayInt(), cur)/N)*100 + "\n");
+        writer2.append((countPollution(lfu.toArrayInt(), unique)/N)*100 + "\n");
         //get next N requests and Check for pollution
 
         while (cur < requests.size()){
             if (i >= N){
-                writer2.append((countPollution(lfu.toArrayInt(), cur)/N)*100 + "\n");
+                writer2.append((countPollution(lfu.toArrayInt(), unique)/N)*100 + "\n");
                 i = 0;
             }
             erased = hashMapInt.containsKey(requests.get(cur)) && !lfu.contains(requests.get(cur));
@@ -108,12 +108,12 @@ public class LFUPollutionCounter {
 		
         //Check for pollution 
         //writer.append((countSingles(lfu.minHeap.toArray())/N)*100 + "\n");
-        writer3.append((countPollution(lru.toArrayInt(), cur)/N)*100 + "\n");
+        writer3.append((countPollution(lru.toArrayInt(), unique)/N)*100 + "\n");
         //get next N requests and Check for pollution
 
         while (cur < requests.size()){
             if (i >= N){
-                writer3.append((countPollution(lru.toArrayInt(), cur)/N)*100 + "\n");
+                writer3.append((countPollution(lru.toArrayInt(), unique)/N)*100 + "\n");
                 i = 0;
             }
             erased = hashMapInt.containsKey(requests.get(cur)) && !lru.contains(requests.get(cur));
@@ -165,13 +165,13 @@ public class LFUPollutionCounter {
 		
         //Check for pollution 
         //writer.append((countSingles(lfu.minHeap.toArray())/N)*100 + "\n");
-        writer4.append((countPollution(arc.toArrayInt(), cur)/N)*100 + "\n");
+        writer4.append((countPollution(arc.toArrayInt(), unique)/N)*100 + "\n");
         //get next N requests and Check for pollution
         int deb = 0;
         while (cur < requests.size()){
             if (i >= N){
                 System.out.println(deb++);
-                writer4.append((countPollution(arc.toArrayInt(), cur)/N)*100 + "\n");
+                writer4.append((countPollution(arc.toArrayInt(), unique)/N)*100 + "\n");
                 i = 0;
             }
             erased = hashMapInt.containsKey(requests.get(cur)) && !arc.contains(requests.get(cur));
@@ -209,10 +209,10 @@ public class LFUPollutionCounter {
         
     }	
 	 
-	public static double countPollution(int[] array, int cur){
+	public static double countPollution(int[] array, int unique){
 	      double result = 0;
 	      for (int i = 0; i < array.length; i++){
-	          if (hashMapInt.containsKey(array[i]) && MapDecayed.get(hashMapInt.get(array[i])).times > 1 && MapDecayed.get(hashMapInt.get(array[i])).stamp < cur - 2*N)
+	          if (hashMapInt.containsKey(array[i]) && MapDecayed.get(hashMapInt.get(array[i])).times > 1 && MapDecayed.get(hashMapInt.get(array[i])).stamp < unique - 2*N)
 	              result += 1;
 	      }      
 	      return result;

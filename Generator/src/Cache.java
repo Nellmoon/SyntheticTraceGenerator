@@ -1,6 +1,6 @@
 /*
  * @author Wendy
- */
+*/
 public interface Cache {
     public void set(int key);
     public int get(int key);

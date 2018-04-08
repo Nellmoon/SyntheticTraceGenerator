@@ -13,7 +13,8 @@ public class StatChartCreator {
                 ChartBuilder.sources.add("..\\Stats\\"+file + "LFUPollution.txt"); 
                 ChartBuilder.sources.add("..\\Stats\\"+file + "LRUPollution.txt"); 
                 ChartBuilder.sources.add("..\\Stats\\"+file + "ARCPollution.txt"); 
-                ChartBuilder.destination = "..\\Stats\\"+file + "LFUandLRUandARCPollution.jpg";
+                ChartBuilder.sources.add("..\\Stats\\"+file + "LaCaRPollution.txt"); 
+                ChartBuilder.destination = "..\\Stats\\"+file + "LFUandLRUandARCandLaCaRPollution.jpg";
                 javafx.application.Application.launch(ChartBuilder.class);
             }
         }.start();
