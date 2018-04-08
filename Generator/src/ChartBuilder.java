@@ -19,12 +19,28 @@ import javafx.scene.image.WritableImage;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 
-
+/**
+ * Creates a chart based on the files defined on the source
+ * @author Wendy Aleman Martinez
+ */
 public class ChartBuilder extends Application{
            
+    /**
+     * Defines where the image of the graphs will be stored
+     */
     public static String destination = "Line Chart.jpg";    
+
+    /**
+     * Array list with all the sources of files to be included as lines on the 
+     * graph, each file represents the results o fan algorithm
+     */
     public static ArrayList<String> sources = new ArrayList<>();
 
+    /**
+     * Saves the graph on the destination
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         saveAsPNG(destination);
@@ -151,6 +167,10 @@ public class ChartBuilder extends Application{
         
     }
     
+    /**
+     * Main method calls launch
+     * @param args
+     */
     public static void main(String args[]){
         launch(args);
     }

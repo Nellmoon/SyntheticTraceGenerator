@@ -1,9 +1,10 @@
-//Modified LeetCode implementation of an LFU Cache
-//By Wendy Aleman Martinez
-//Intentional left out value since for the purpose of creating request the value will be equal to the key
-
 import java.util.*;
 
+/**
+ * Modified LeetCode implementation of an Least Frequently Used(LFU) Cache
+ * @author Wendy Aleman Martinez
+ * Intentional left out value since for the purpose of creating request the value will be equal to the key
+ */
 public class LFUCache implements Cache{
     long stamp;
     int capacity;
@@ -12,6 +13,12 @@ public class LFUCache implements Cache{
     HashMap<Integer, Pair> hashMap;
 
     // @param capacity, an integer
+
+    /**
+     * Constructor
+     * @param capacity
+     * indicates size of the cache = C = N
+     */
     public LFUCache(int capacity) {
         // Write your code here
         this.capacity = capacity;
@@ -78,6 +85,11 @@ public class LFUCache implements Cache{
         return hashMap.containsKey(key);
     }     
     
+    /**
+     * @param key
+     * @return
+     * 1 if the page key is contained on the cache with frequency 1, 0 otherwise
+     */
     public boolean containsOnce (int key){
         if (capacity == 0) {
             return false;

@@ -10,10 +10,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-public class LFUPollutionCounter {
+/**
+ * Counts the pollution of a cache
+ * @author Wendy Aleman Martinez
+ */
+public class PollutionCounter {
+
+    /**
+     * Cache size 
+     */
     public static int N = 500;
+
+    /**
+     * Maps the pages that have being on cache 
+     */
     public static List<Pair> MapDecayed = new ArrayList<>();
+
+    /**
+     * Maps page with the index on cache
+     */
     public static HashMap<Integer, Integer> hashMapInt = new HashMap<>();
+
+    /**
+     * Checks pollution for LRU, LFU, ARC
+     * @param args
+     * @throws IOException
+     * @throws Exception
+     */
     public static void main(String[] args) throws IOException, Exception {
         Scanner in = new Scanner(System.in);
         String file = in.nextLine();      
@@ -209,26 +232,38 @@ public class LFUPollutionCounter {
         
     }	
 	 
-	public static double countPollution(int[] array, int unique){
-	      double result = 0;
-	      for (int i = 0; i < array.length; i++){
-	          if (hashMapInt.containsKey(array[i]) && MapDecayed.get(hashMapInt.get(array[i])).times > 1 && MapDecayed.get(hashMapInt.get(array[i])).stamp < unique - 2*N)
-	              result += 1;
-	      }      
-	      return result;
-  	}
+    /**
+     * Counts the pollution at a specific moment of the cache
+     * @param array
+     * @param unique
+     * @return
+     */
+    public static double countPollution(int[] array, int unique){
+	double result = 0;
+	for (int i = 0; i < array.length; i++){
+	    if (hashMapInt.containsKey(array[i]) && MapDecayed.get(hashMapInt.get(array[i])).times > 1 && MapDecayed.get(hashMapInt.get(array[i])).stamp < unique - 2*N)
+	        result += 1;
+	}      
+	return result;
+    }
 	
-	public static List<Integer> readLines(File file) throws Exception {
-	      if (!file.exists()) {
-	          return new ArrayList<Integer>();
-	      }
-	      BufferedReader reader = new BufferedReader(new FileReader(file));
-	      List<Integer> results = new ArrayList<>();
-	      String line = reader.readLine();
-	      while (line != null) {
-	          results.add(Integer.parseInt(line));
-	          line = reader.readLine();
-	      }
-	      return results;
-  	}
+    /**
+     * Reads from a file
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    public static List<Integer> readLines(File file) throws Exception {
+        if (!file.exists()) {
+            return new ArrayList<Integer>();
+        }
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        List<Integer> results = new ArrayList<>();
+        String line = reader.readLine();
+        while (line != null) {
+            results.add(Integer.parseInt(line));
+            line = reader.readLine();
+        }
+        return results;
+    }
 }

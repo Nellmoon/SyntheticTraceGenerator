@@ -1,18 +1,52 @@
 import java.util.LinkedList;
 
+/**
+ * @author Wendy Aleman Martinez & Giuseppe Vietri
+ * Implementation of the Adaptive Replacement Algorithm (ARC)
+ */
 public class ARCCache implements Cache{  
+
+    /**
+     * Size of the Cache (N)
+     */
     public int C;
-    public LinkedList<Integer> t1, t2, b1, b2;
-    public LinkedList<String> hist;
+
+    /**
+     * Cache portion for recency (LRU)
+     */
+    public LinkedList<Integer> t1,
+
+    /**
+     * Cache portion for frequency (LFU)
+     */
+    t2,
+
+    /**
+     * History portion for recency (LRU)
+     */
+    b1,
+
+    /**
+     * History portion for frequency (LFU)
+     */
+    b2;
+
+    /**
+     * Parameter P that controls the size of L1 and L2
+     */
     public double P;
     
+    /**
+     * Constructor
+     * @param cache_sz
+     * Cache size = C = N
+     */
     public ARCCache(int cache_sz){
         C = cache_sz;
         t1 = new LinkedList<>();
         t2 = new LinkedList<>();
         b1 = new LinkedList<>();
         b2 = new LinkedList<>();
-        hist = new LinkedList<>();
         P = 0.0;
     }
     
@@ -53,7 +87,6 @@ public class ARCCache implements Cache{
             }
             ADD_MRU(t1,x);
         }
-        hist.add(this.str_hash());    
     }
     
     private void replace(int x){
@@ -66,6 +99,7 @@ public class ARCCache implements Cache{
             ADD_MRU(b2,y);
         }	
     }
+    
     public int get(int key){
         return -1;
     }
@@ -97,41 +131,89 @@ public class ARCCache implements Cache{
         System.out.println(" B2: " + b2.toString());
     }
     
+    /**
+     * @param key 
+     * @return
+     * 1 if the page key is contained on T1, 0 otherwise
+     */
     public boolean t1_contains(int key){
         return t1.contains(key);
     }
     
+    /**
+     * @param key
+     * @return
+     * 1 if the page key is contained on T1, 0 otherwise
+     */
     public boolean t2_contains(int key){
         return t2.contains(key);
     }
     
+    /**
+     * @param key
+     * @return
+     * 1 if the page key is contained on B1, 0 otherwise
+     */
     public boolean b1_contains(int key){
         return b1.contains(key);
     }
     
+    /**
+     * @param key
+     * @return
+     * 1 if the page key is contained on B2, 0 otherwise
+     */
     public boolean b2_contains(int key){
         return b2.contains(key);
     }
     
+    /**
+     * @param l
+     * @param x
+     * Delete element x from linked list l
+     */
     protected void DEL(LinkedList<Integer> l, int x){
         l.removeFirstOccurrence((Integer)x);
     }
     
+    /**
+     * @param l
+     * @return 
+     * Size of the linked list l
+     */
     protected int SZ(LinkedList<Integer> l){
         return l.size();
     }
+
+    /**
+     * @param x
+     * @param l
+     * @return
+     * 1 if l is contained on linked list x, 0 otherwise
+     */
     protected boolean IN(int x, LinkedList<Integer> l){
         return l.contains(x);
     }
 
+    /**
+     * @param l
+     * @param x
+     * Add x as the most recently used page of l
+     */
     protected void ADD_MRU(LinkedList<Integer> l, int x){
         l.addLast(x);
     }
+    
     int DEL_LRU(LinkedList<Integer> l){
         int x = l.getFirst();
         l.removeFirst();
         return x;
     }
+
+    /**
+     * @return 
+     * hashed string with the contents of the cache
+     */
     public String str_hash(){
         String hash = "";
 

@@ -6,7 +6,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
+/**
+ * @author Wendy Aleman Martinez
+ */
 public class InputGen {
+
+    /**
+     * Reads the config parameters from a txt and converts them into the config file 
+     * for all experiments 
+     * @param filename
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public InputGen(String filename) throws FileNotFoundException, IOException{
         Properties prop = new Properties();
         OutputStream output = null;

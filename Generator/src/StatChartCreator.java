@@ -1,8 +1,15 @@
-
 import java.util.Scanner;
 
-
+/**
+ * Creates  the files for future use containing the pollution counter of the pages and
+ * the Image of the graph with LFU, LRU, ARC, and LeCaR results. 
+ * @author Wendy Aleman Martinez
+ */
 public class StatChartCreator {
+
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         String file = in.nextLine();

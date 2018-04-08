@@ -1,11 +1,20 @@
 import java.util.*;
 
+/**
+ * Implementation of an Least Recently Used (LRU) Cache 
+ * @author Wendy Aleman Martinez
+ */
 class LRUCache implements Cache{
     int capacity;
     HashMap<Integer, Node> map = new HashMap<>();
     Node head=null;
     Node end=null;
  
+    /**
+    * Constructor
+    * @param capacity
+    * indicates size of the cache = C = N
+    */
     public LRUCache(int capacity) {
         this.capacity = capacity;
     }
@@ -110,6 +119,10 @@ class LRUCache implements Cache{
     }
 }
 
+/**
+* Class similar to Pair but without a 
+* frequency counter
+*/
 class Node{
     int key;
     Node pre;

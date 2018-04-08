@@ -12,6 +12,10 @@ import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * @author Wendy Aleman Martinez
+ * Class to create Synthetic traces 
+ */
 public class SyntecticGenerator {
     static int exp1Hits, exp1Miss, exp2Hits, exp2Miss, exp1, exp2, cacheSize, reqRange, neededSeq, noise, numChanges;
     static String Description;
@@ -20,6 +24,10 @@ public class SyntecticGenerator {
     static Cache exp2_Cache, exp1_Cache;
     static BufferedWriter writer;
     
+    /**
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {        
         Scanner in = new Scanner(System.in);
         
@@ -69,6 +77,10 @@ public class SyntecticGenerator {
         insertFileAttr(Paths.get("..\\Output\\"+filenameProp+ "Result.txt"));
     }
     
+    /**
+     * Shuffle the contents of the array ar
+     * @param ar
+     */
     static void shuffleArray(int[] ar){
         Random rnd = ThreadLocalRandom.current();
         for (int i = ar.length - 1; i > 0; i--)
@@ -80,6 +92,11 @@ public class SyntecticGenerator {
         }
     }
     
+    /**
+     * Returns the number of times an integer will be repeated based on a 
+     * probability prob from 0 to 99 
+     * @param prob
+     */
     static int seqInt (int prob){
         if (prob < 21)
             return 1;
@@ -88,14 +105,28 @@ public class SyntecticGenerator {
         return 3;            
     }
     
+    /**
+     * @returns
+     * 1 if random number is less than needed, 0 otherwise.... set to be 1 
+     */
     static boolean coinFlip(){
         int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
         return randomNum < 100;
     }
+    
+    /**
+     * @returns
+     * 1 if random number is less than noise, 0 otherwise.... set to be 1 
+     */
     static boolean addNoise(){
         int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
         return randomNum < noise;
     }
+    
+    /**
+     * Pages printed will behave either LRU or LFU favorable
+     * Leaves ARC out of the scope
+     */
     static void LRULFU() throws IOException{
         { 
             exp1_Cache = new LRUCache(cacheSize);
@@ -202,6 +233,10 @@ public class SyntecticGenerator {
         System.out.println("***************************************************");       
     }    
     
+    /**
+     * Pages printed will behave either LRU or ARC favorable
+     * Leaves LFU out of the scope
+     */
     static void LRUARC()throws IOException { 
         exp1_Cache = new LRUCache(cacheSize);
         exp2_Cache = new ARCCache(cacheSize);   
@@ -417,6 +452,10 @@ public class SyntecticGenerator {
         System.out.println("***************************************************");
     }   
         
+    /**
+     * Pages printed will behave either LFU or ARC favorable
+     * Leaves LRU out of the scope
+     */
     static void LFUARC() throws IOException { 
         exp1_Cache = new LFUCache(cacheSize);
         exp2_Cache = new ARCCache(cacheSize);   
@@ -577,6 +616,9 @@ public class SyntecticGenerator {
         System.out.println("***************************************************");
     } 
     
+    /**
+     * Reads the experiment config file 
+     */
     static void LoadPropertieFile() throws FileNotFoundException, IOException{
         Properties prop = new Properties();
 	InputStream input = null;
@@ -598,6 +640,10 @@ public class SyntecticGenerator {
         input.close();
     }
     
+    /**
+     * Inserts important variable and comments into the file metadata
+     * so we can identify the setup without having extra files. 
+     */
     static void insertFileAttr(Path filePath) throws FileNotFoundException, IOException{
         UserDefinedFileAttributeView view = Files.getFileAttributeView(filePath, UserDefinedFileAttributeView.class);
         // The file attribute
