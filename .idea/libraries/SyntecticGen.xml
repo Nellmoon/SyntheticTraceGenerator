@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SyntecticGen">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Generator/dist/SyntecticGen.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
