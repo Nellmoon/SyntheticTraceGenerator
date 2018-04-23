@@ -77,11 +77,17 @@ public class MainWindow extends javax.swing.JFrame {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jLabel3 = new javax.swing.JLabel();
         labelGif = new javax.swing.JLabel();
-        aboutDialog = new javax.swing.JDialog();
-        jPanel1 = new javax.swing.JPanel();
+        helpDialog = new javax.swing.JDialog();
+        jLayeredPane2 = new javax.swing.JLayeredPane();
+        jlBackground = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
+        jLayeredPane3 = new javax.swing.JLayeredPane();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         traceDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         traceDialog.setTitle("Synthetic Trace Generator");
@@ -487,22 +493,52 @@ public class MainWindow extends javax.swing.JFrame {
             .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
-        javax.swing.GroupLayout aboutDialogLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
-        aboutDialog.getContentPane().setLayout(aboutDialogLayout);
-        aboutDialogLayout.setHorizontalGroup(
-            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 269, Short.MAX_VALUE)
+        helpDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        helpDialog.setTitle("Help");
+        helpDialog.setResizable(false);
+
+        jlBackground.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jlBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/images/background.jpg"))); // NOI18N
+        jLayeredPane2.add(jlBackground);
+        jlBackground.setBounds(0, -120, 700, 800);
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jTextArea1.setRows(5);
+        jTextArea1.setTabSize(4);
+        jTextArea1.setText("\n-  Use the Synthetic Trace Generator in order to create request sequences that are favorable to \n   the selected algorithm. Complete the form to define parameters such as the size of the cache, \n   the experts to study, or the number of  page requests. \n\n-  Use the Pollution Counter to study hoarding on an specified trace. Make sure to state the correct\n   cache size used to create the trace. A file containing the graph of pollution will be stored on the \n   folder Stats as a result. \n\n-  The time to run the experiments depends of the size of your cache and the number of requests, \n   please be patient. \n");
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jLayeredPane2.setLayer(jScrollPane1, javax.swing.JLayeredPane.MODAL_LAYER);
+        jLayeredPane2.add(jScrollPane1);
+        jScrollPane1.setBounds(10, 100, 670, 240);
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButton1.setText("Close");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jLayeredPane2.setLayer(jButton1, javax.swing.JLayeredPane.MODAL_LAYER);
+        jLayeredPane2.add(jButton1);
+        jButton1.setBounds(600, 363, 80, 30);
+
+        javax.swing.GroupLayout helpDialogLayout = new javax.swing.GroupLayout(helpDialog.getContentPane());
+        helpDialog.getContentPane().setLayout(helpDialogLayout);
+        helpDialogLayout.setHorizontalGroup(
+            helpDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLayeredPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
         );
-        aboutDialogLayout.setVerticalGroup(
-            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 322, Short.MAX_VALUE)
+        helpDialogLayout.setVerticalGroup(
+            helpDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLayeredPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Experiment Helper");
         setResizable(false);
-
-        jPanel1.setLayout(new java.awt.GridLayout(3, 1, 0, 40));
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jButton2.setText("Trace Generator");
@@ -511,7 +547,9 @@ public class MainWindow extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2);
+        jLayeredPane3.setLayer(jButton2, javax.swing.JLayeredPane.MODAL_LAYER);
+        jLayeredPane3.add(jButton2);
+        jButton2.setBounds(10, 120, 270, 46);
 
         jButton3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jButton3.setText("Pollution Counter");
@@ -520,27 +558,34 @@ public class MainWindow extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3);
+        jLayeredPane3.setLayer(jButton3, javax.swing.JLayeredPane.MODAL_LAYER);
+        jLayeredPane3.add(jButton3);
+        jButton3.setBounds(10, 190, 270, 46);
 
         jButton4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButton4.setText("About");
-        jPanel1.add(jButton4);
+        jButton4.setText("Help");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jLayeredPane3.setLayer(jButton4, javax.swing.JLayeredPane.MODAL_LAYER);
+        jLayeredPane3.add(jButton4);
+        jButton4.setBounds(10, 260, 270, 46);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/images/background.jpg"))); // NOI18N
+        jLayeredPane3.add(jLabel1);
+        jLabel1.setBounds(0, 0, 410, 640);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jLayeredPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(54, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37))
+            .addComponent(jLayeredPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
         );
 
         pack();
@@ -614,6 +659,15 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_arc2RBStateChanged
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        initHelpDialog();
+        helpDialog.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        helpDialog.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -651,16 +705,18 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JDialog aboutDialog;
     private javax.swing.JRadioButton arc1RB;
     private javax.swing.JRadioButton arc2RB;
     private javax.swing.ButtonGroup bGroupFirstExp;
     private javax.swing.ButtonGroup bgGroupSecondExp;
     private javax.swing.JFileChooser fileChooser;
     private javax.swing.JDialog fileDialog;
+    private javax.swing.JDialog helpDialog;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -670,7 +726,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLayeredPane jLayeredPane2;
+    private javax.swing.JLayeredPane jLayeredPane3;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -678,6 +735,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton jbFind;
     private javax.swing.JButton jbRunExpPollution;
     private javax.swing.JComboBox<String> jcbCacheSize;
@@ -687,6 +746,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jcbNumChanges;
     private javax.swing.JFormattedTextField jftCacheSize;
     private javax.swing.JFormattedTextField jftTraceSize;
+    private javax.swing.JLabel jlBackground;
     private javax.swing.JTextField jtfAddress;
     private javax.swing.JTextField jtfDescription;
     private javax.swing.JTextField jtfFilename;
@@ -709,8 +769,8 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     private void initTraceDialog() {
-        int x = 520;
-        int y = 390;
+        int x = 550;
+        int y = 400;
         traceDialog.setLocation(desktopDimension.width/2 - x/2, desktopDimension.height/2 -y/2);
         traceDialog.setSize(x,y);
         
@@ -729,10 +789,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void initFileDialog() {
         int x = 500;
         int y = 210;
-        jtfAddress.setText("");
         fileDialog.setLocation(desktopDimension.width/2 - x/2, desktopDimension.height/2 -y/2);
         fileDialog.setSize(x,y);
         jtfAddress.setText("");
+        jftCacheSize.setText("");
     }
 
     private void initFileChooser() {
@@ -740,6 +800,13 @@ public class MainWindow extends javax.swing.JFrame {
         int y = 480;
         fileChooser.setLocation(desktopDimension.width/2 - x/2, desktopDimension.height/2 -y/2);
         fileChooser.setSize(x,y);
+    }
+    
+    private void initHelpDialog() {
+        int x = 697;
+        int y = 435;
+        helpDialog.setLocation(desktopDimension.width/2 - x/2, desktopDimension.height/2 -y/2);
+        helpDialog.setSize(x,y);
     }
 
     private void exportConfigFile() throws FileNotFoundException {
